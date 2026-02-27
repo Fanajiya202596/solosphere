@@ -45,3 +45,15 @@ class Assignment:
 
         conn.commit()
         conn.close()
+    @staticmethod
+    def delete(assignment_id):
+        conn = sqlite3.connect(Config.DATABASE_PATH)
+        c = conn.cursor()
+
+        c.execute("""
+            DELETE FROM assignments
+            WHERE id = ?
+        """, (assignment_id,))
+
+        conn.commit()
+        conn.close()

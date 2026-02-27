@@ -50,3 +50,8 @@ def update_assignment_status(assignment_id):
     Assignment.update_status(assignment_id, status)
 
     return jsonify({"message": "Assignment status updated successfully"})
+# DELETE ASSIGNMENT
+@assignment_bp.route("/assignments/<int:assignment_id>", methods=["DELETE"])
+def delete_assignment(assignment_id):
+    Assignment.delete(assignment_id)
+    return jsonify({"message": "Assignment deleted successfully"})
