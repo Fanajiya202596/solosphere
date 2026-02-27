@@ -37,3 +37,16 @@ def get_assignments(subject_id):
         })
 
     return jsonify(assignment_list)
+
+# UPDATE ASSIGNMENT STATUS
+@assignment_bp.route("/assignments/<int:assignment_id>", methods=["POST"])
+def update_assignment_status(assignment_id):
+    data = request.get_json()
+    status = data.get("status")
+
+    if not status:
+        return jsonify({"error": "Status required"}), 400
+
+    Assignment.update_status(assignment_id, status)
+
+    return jsonify({"message": "Assignment status updated successfully"})

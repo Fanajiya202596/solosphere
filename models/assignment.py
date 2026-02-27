@@ -31,3 +31,17 @@ class Assignment:
         assignments = c.fetchall()
         conn.close()
         return assignments
+    
+    @staticmethod
+    def update_status(assignment_id, status):
+        conn = sqlite3.connect(Config.DATABASE_PATH)
+        c = conn.cursor()
+
+        c.execute("""
+            UPDATE assignments
+            SET status = ?
+            WHERE id = ?
+        """, (status, assignment_id))
+
+        conn.commit()
+        conn.close()
