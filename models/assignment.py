@@ -37,6 +37,14 @@ class Assignment:
         conn = sqlite3.connect(Config.DATABASE_PATH)
         c = conn.cursor()
 
+        # Check if assignment exists
+        c.execute("SELECT id FROM assignments WHERE id = ?", (assignment_id,))
+        assignment = c.fetchone()
+
+        if not assignment:
+            conn.close()
+            return False  # Not found
+
         c.execute("""
             UPDATE assignments
             SET status = ?
@@ -45,6 +53,7 @@ class Assignment:
 
         conn.commit()
         conn.close()
+        return True
     @staticmethod
     def delete(assignment_id):
         conn = sqlite3.connect(Config.DATABASE_PATH)
@@ -57,3 +66,27 @@ class Assignment:
 
         conn.commit()
         conn.close()
+    @staticmethod
+    def get_stats():
+        conn = sqlite3.connect(Config.DATABASE_PATH)
+        c = conn.cursor()
+
+        # Total assignments
+        c.execute("SELECT COUNT(*) FROM assignments")
+        total = c.fetchone()[0]
+
+        # Completed
+        c.execute("SELECT COUNT(*) FROM assignments WHERE status = 'completed'")
+        completed = c.fetchone()[0]
+
+        # Pending
+        c.execute("SELECT COUNT(*) FROM assignments WHERE status = 'pending'")
+        pending = c.fetchone()[0]
+
+        conn.close()
+
+        return {
+            "total": total,
+            "completed": completed,
+            "pending": pending
+        }

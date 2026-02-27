@@ -2,6 +2,7 @@ from flask import Flask
 from config import Config
 from utils.db_init import init_db
 from routes.assignment_routes import assignment_bp
+from routes.auth_routes import auth_bp
 
 def create_app():
     app = Flask(__name__)
@@ -15,6 +16,8 @@ def create_app():
     app.register_blueprint(subject_bp)
 
     app.register_blueprint(assignment_bp)
+
+    app.register_blueprint(auth_bp)
 
     return app
 

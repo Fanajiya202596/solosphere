@@ -5,6 +5,16 @@ def init_db():
     conn = sqlite3.connect(Config.DATABASE_PATH)
     c = conn.cursor()
 
+    
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
     # Subjects table
     c.execute("""
     CREATE TABLE IF NOT EXISTS subjects (
@@ -34,6 +44,7 @@ def init_db():
         session_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
+
 
     conn.commit()
     conn.close()

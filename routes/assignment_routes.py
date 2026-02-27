@@ -47,11 +47,23 @@ def update_assignment_status(assignment_id):
     if not status:
         return jsonify({"error": "Status required"}), 400
 
-    Assignment.update_status(assignment_id, status)
+    if status not in ["pending", "completed"]:
+        return jsonify({"error": "Invalid status value"}), 400
 
-    return jsonify({"message": "Assignment status updated successfully"})
+    updated = Assignment.update_status(assignment_id, status)
+
+    if not updated:
+        return jsonify({"error": "Assignment not found"}), 404
+
+    return jsonify({"message": "Assignment status updated successfully"}), 200
+
 # DELETE ASSIGNMENT
 @assignment_bp.route("/assignments/<int:assignment_id>", methods=["DELETE"])
 def delete_assignment(assignment_id):
     Assignment.delete(assignment_id)
     return jsonify({"message": "Assignment deleted successfully"})
+# DASHBOARD STATS
+@assignment_bp.route("/dashboard", methods=["GET"])
+def dashboard_stats():
+    stats = Assignment.get_stats()
+    return jsonify(stats)
